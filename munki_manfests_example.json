@@ -1,0 +1,10 @@
+{
+	"persistent-apps": [
+		"/Applications/Slack.app",
+		"/Applications/Messages.app",
+		"/Applications/Microsoft Outlook.app"
+	],
+	"persistent-others": [
+		"/Applications/Utilities"
+	]
+}

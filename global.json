@@ -1,0 +1,18 @@
+{
+	"persistent-apps": [
+		"/Applications/Launchpad.app",
+		"/Applications/Safari.app",
+		"/Applications/Google Chrome.app", 
+		"/Applications/Firefox.app",
+		"/Applications/Microsoft Word.app",
+		"/Applications/Microsoft Excel.app",
+		"/Applications/Microsoft PowerPoint.app",
+		"/Applications/Adobe Illustrator CC 2019/Adobe Illustrator CC 2019.app",
+		"/Applications/Adobe InDesign CC 2019/Adobe InDesign CC 2019.app",
+		"/Applications/Adobe Photoshop CC 2019/Adobe Photoshop CC 2019.app"
+	],
+	"persistent-others": [
+		"~/Downloads",
+		"/Applications"
+	]
+}

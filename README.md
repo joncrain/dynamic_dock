@@ -3,6 +3,10 @@ Dynamic Dock for macOS and munki
 
 ***Inspiration (and the framework for this readme!) taken from https://github.com/WardsParadox/dock-maintainer***
 
+## Basic Idea
+
+A script is loaded on every user log in which checks for a group of json files on a server to grab its configuration for the dock.
+
 Manages dock for all users. [docklib](https://github.com/homebysix/docklib/releases) is required. I recommend using this with [Outset](https://github.com/chilcote/outset) and [Munki](https://github.com/munki/munki) (Outset for launching files as needed, Munki for deploying/hosting the `dock` files as it's web server requirements mirror the ones here)
 
 ## Deployment:

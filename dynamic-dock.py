@@ -52,13 +52,11 @@ def dock_altered():
     '''
     Checking to see if dock has been altered by user returns False if mod-count < 3
     '''
-    plist_to_check = "com.apple.dock.plist"
-    check = CFPreferencesCopyAppValue("mod-count", plist_to_check)
-    if check <  3: 
-        altered = False
+    mod_count = CFPreferencesCopyAppValue("mod-count", "com.apple.dock.plist")
+    if mod_count < 3: 
+        return False
     else:
-        altered = True
-    return altered
+        return True
 
 def backup_dock(dock_name):
     '''

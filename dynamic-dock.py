@@ -2,13 +2,17 @@
 
 import stat
 import os
-import urllib2
 import json
 import sys
 from docklib import Dock
-from Foundation import CFPreferencesCopyAppValue
 
-dock_url = "https://munki.example.org/dock/"
+try:
+    from urllib.request import urlopen  # Python 3
+    from urllib.error import HTTPError, URLError
+except ImportError:
+    from urllib2 import urlopen, HTTPError, URLError  # Python 2
+
+dock_url = "https://domain.org/dock/"
 dock_backup = "/Users/Shared/dock/"
 if not os.path.exists(dock_backup):
     os.makedirs(dock_backup)
@@ -20,7 +24,7 @@ def get_applications(dock_name):
     Returns a dictionary of applications from a file called "dock_name.json"
     """
     try:
-        response = urllib2.urlopen("%s%s.json" % (dock_url, dock_name))
+        response = urlopen("%s%s.json" % (dock_url, dock_name))
         backup_file = "%s%s.json" % (dock_backup, dock_name)
         if not os.path.exists(backup_file):
             f = open(backup_file, "w")
@@ -31,13 +35,14 @@ def get_applications(dock_name):
         f.write(app_json)
         f.close()
         dock_dict = json.loads(app_json)
-    except urllib2.HTTPError as err:
+    except HTTPError:
         """
         404 connection error - 
         The json for this manifest doesn't exist
         """
+        dock_dict = {}
         pass
-    except urllib2.URLError as err:
+    except URLError:
         """
         Most likely we have lost connection
         so we will fall back to the standard dock
@@ -50,22 +55,11 @@ def get_applications(dock_name):
     return dock_dict
 
 
-def dock_altered():
-    """
-    Checking to see if dock has been altered by user returns False if mod-count < 3
-    """
-    mod_count = CFPreferencesCopyAppValue("mod-count", "com.apple.dock.plist")
-    if mod_count < 3:
-        return False
-    else:
-        return True
-
-
 def backup_dock(dock_name):
     """
     Create a backup of the dock files in case the machine or server goes offline
     """
-    response = urllib2.urlopen("%s%s.json" % (dock_url, dock_name))
+    response = urlopen("%s%s.json" % (dock_url, dock_name))
     return response
 
 
@@ -93,18 +87,17 @@ def main():
     """
     Run the program
     """
-    if dock_altered() == True:
+
+    dock = Dock()
+    if dock.mod_count > 3:
         sys.exit()
 
-    # Clear the dock
-    dock = Dock()
-    global_clear = []
     applications_pa = []
     applications_po = []
     # Get standard applications
     try:
-        applications_pa = get_app_list("global", "persistent-apps")
-        applications_po = get_app_list("global", "persistent-others")
+        applications_pa = get_app_list("global_staff", "persistent-apps")
+        applications_po = get_app_list("global_staff", "persistent-others")
     except:
         pass
 
@@ -114,7 +107,7 @@ def main():
     # Check for existence of dock for manifests and clear if one doesn't want global
     for munki_manifest in munki_manifests:
         try:
-            if get_app_list(munki_manifest, "use-global") == False:
+            if get_app_list(munki_manifest, "use-global") is False:
                 applications_pa = []
                 applications_po = []
         except:
